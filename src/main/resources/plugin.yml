@@ -1,0 +1,10 @@
+name: TranslateX
+version: '${project.version}'
+main: nl.rubixstudios.translate.TranslateX
+authors: [ Djorr ]
+depend:
+  - ProtocolLib
+commands:
+  translator:
+    description: Translate a message
+    aliases: [ tr, t, translator, translate ]

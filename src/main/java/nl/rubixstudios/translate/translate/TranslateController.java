@@ -117,6 +117,8 @@ public class TranslateController implements Listener {
         if (this.authKeysPool.isEmpty()) {
             TranslateX.getInstance().log("&cNo auth keys found in config.yml! Please add some auth keys to the config.yml file.");
             return;
+        } else if (this.authKeysPool.contains("<YOUR DEEPL API KEY>")) {
+            TranslateX.getInstance().log("&cPlease replace the default auth key in the config.yml file with your own DeepL");
         }
 
         for (String authKey : this.authKeysPool) {
@@ -125,6 +127,7 @@ public class TranslateController implements Listener {
                 continue;
             }
             this.currentKey = authKey;
+
             this.translator = new Translator(authKey);
             break;
         }
@@ -135,7 +138,14 @@ public class TranslateController implements Listener {
         if (authKey == null) return true;
         if (authKey.contains("[LIMIT_REACHED]")) return true;
 
-        final Usage usage = new Translator(authKey).getUsage();
+        Usage usage;
+        try {
+            usage = new Translator(authKey).getUsage();
+        } catch (DeepLException e) {
+            TranslateX.getInstance().log("&cError while checking usage for auth key: " + authKey);
+            return true;
+        }
+
         if (usage.anyLimitReached()) {
             System.out.println("Reached usage limit for auth key: " + authKey);
             return true;

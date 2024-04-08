@@ -52,18 +52,18 @@ public final class TranslateX extends JavaPlugin {
 
         new Config();
 
-        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-            this.log("&eChecking ProtocolLib:");
-            this.log("   &aSuccesfully detected &e&lProtocolLib&a!");
-            this.log("");
-        } else {
-            this.log("&eChecking ProtocolLib:");
-            this.log("   &c&lProtocolLib is not installed on this server!");
-            this.log("   &c&lPlease install &e&lProtocolLib &c&lto use this plugin!");
-            this.log("");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+//        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+//            this.log("&eChecking ProtocolLib:");
+//            this.log("   &aSuccesfully detected &e&lProtocolLib&a!");
+//            this.log("");
+//        } else {
+//            this.log("&eChecking ProtocolLib:");
+//            this.log("   &c&lProtocolLib is not installed on this server!");
+//            this.log("   &c&lPlease install &e&lProtocolLib &c&lto use this plugin!");
+//            this.log("");
+//            Bukkit.getPluginManager().disablePlugin(this);
+//            return;
+//        }
 
 
         this.translatorController = new TranslateController();

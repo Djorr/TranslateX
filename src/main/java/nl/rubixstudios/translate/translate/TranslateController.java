@@ -119,6 +119,7 @@ public class TranslateController implements Listener {
             return;
         } else if (this.authKeysPool.contains("<YOUR DEEPL API KEY>")) {
             TranslateX.getInstance().log("&cPlease replace the default auth key in the config.yml file with your own DeepL");
+            return;
         }
 
         for (String authKey : this.authKeysPool) {

@@ -109,6 +109,11 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
                 break;
             }
             case "setlang": {
+                if (args.length < 2) {
+                    sender.sendMessage(ColorUtil.translate("&cUsage: /translator setlang <langcode>"));
+                    return false;
+                }
+
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ColorUtil.translate("&cYou must be a player to do this."));
                     return false;

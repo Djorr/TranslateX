@@ -3,9 +3,11 @@ package nl.rubixstudios.translate.data;
 import lombok.Getter;
 import nl.rubixstudios.translate.TranslateX;
 import nl.rubixstudios.translate.util.ColorUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,74 +19,84 @@ import java.util.stream.Stream;
 @Getter
 public class ConfigFile extends YamlConfiguration {
 
-    private static final TranslateX mainInstance = TranslateX.getInstance();
+    protected final String name;
+    protected YamlConfiguration config;
+    protected ConfigCommenter commenter = new ConfigCommenter();
+    protected File file;
 
-    private final File file;
-
-    public ConfigFile(String name) throws RuntimeException {
-        this.file = new File(mainInstance.getDataFolder(), name);
-
-        if (!this.file.exists()) {
-            mainInstance.saveResource(name, false);
-        }
-
-        try {
-            this.load(this.file);
-        } catch (IOException | InvalidConfigurationException e) {
-            mainInstance.log("");
-            mainInstance.log("&9===&b=============================================&9===");
-            mainInstance.log(center("&cError occurred while loading " + name + ".", 51));
-            mainInstance.log("");
-
-            Stream.of(e.getMessage().split("\n")).forEach(mainInstance::log);
-
-            mainInstance.log("&9===&b=============================================&9===");
-            throw new RuntimeException();
-        }
-    }
-
-    public String center(String value, int maxLength) {
-        StringBuilder builder = new StringBuilder(maxLength - value.length());
-        IntStream.range(0, maxLength - value.length()).forEach(i -> builder.append(" "));
-
-        builder.insert((builder.length() / 2) + 1, value);
-        return builder.toString();
+    public ConfigFile(String name, Plugin plugin) {
+        this.name = name;
+        file = new File(plugin.getDataFolder(), name);
+        config = new YamlConfiguration();
+        if (!file.exists())
+            plugin.saveResource(name, false);
+        config.options().copyDefaults(true);
     }
 
     public void save() {
         try {
-            this.save(this.file);
-        } catch (IOException e) {
+            config.save(file);
+            commenter.saveComments(file);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public ConfigurationSection getSection(String name) {
-        return super.getConfigurationSection(name);
+    public void addComment(String path, String comment) {
+        commenter.addComment(path, comment);
     }
 
-    @Override
-    public int getInt(String path) {
-        return super.getInt(path, 0);
+    public void setHeader(String header) {
+        commenter.setHeader(header);
     }
 
-    @Override
-    public double getDouble(String path) {
-        return super.getDouble(path, 0.0);
+    public void load() {
+        try {
+            config.load(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public boolean getBoolean(String path) {
-        return super.getBoolean(path, false);
+    public void set(String path, Object val) {
+        config.set(path, val);
     }
 
-    @Override
-    public String getString(String path) {
-        return ColorUtil.translate(super.getString(path, ""));
+    public boolean getBoolean(String path, boolean def) {
+        config.addDefault(path, def);
+        return config.getBoolean(path, config.getBoolean(path));
     }
 
-    @Override
+    public double getDouble(String path, double def) {
+        config.addDefault(path, def);
+        return config.getDouble(path, config.getDouble(path));
+    }
+
+    public int getInt(String path, int def) {
+        config.addDefault(path, def);
+        return config.getInt(path, config.getInt(path));
+    }
+
+    public <T> List getList(String path, T def) {
+        config.addDefault(path, def);
+        return config.getList(path, config.getList(path));
+    }
+
+    public String getString(String path, String def) {
+        config.addDefault(path, def);
+        return config.getString(path, config.getString(path));
+    }
+
+    public Object get(String path, Config setting) {
+        Object def = setting.getValue();
+        return def instanceof Integer ? getInt(path, (Integer) def) :
+                def instanceof Double ? getDouble(path, (Double) def) :
+                        def instanceof Boolean ? getBoolean(path, (Boolean) def) :
+                                def instanceof String ? getString(path, (String) def) :
+                                        def instanceof List ? getList(path, (List) def) : def;
+    }
+
     public List<String> getStringList(String path) {
-        return super.getStringList(path).stream().map(ColorUtil::translate).collect(Collectors.toList());
+        return config.getStringList(path).stream().map(string -> ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
     }
 }

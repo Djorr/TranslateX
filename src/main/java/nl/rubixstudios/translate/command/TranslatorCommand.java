@@ -7,6 +7,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import nl.rubixstudios.translate.TranslateX;
+import nl.rubixstudios.translate.data.ConfigFile;
 import nl.rubixstudios.translate.translate.TranslateController;
 import nl.rubixstudios.translate.util.ColorUtil;
 import org.bukkit.command.Command;
@@ -54,7 +56,7 @@ public class TranslatorCommand implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-
+                TranslateX.getInstance().reloadConfig();
                 sender.sendMessage(ColorUtil.translate("&aReloaded the plugin."));
                 break;
             }

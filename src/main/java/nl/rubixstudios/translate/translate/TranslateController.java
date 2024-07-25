@@ -51,7 +51,7 @@ public class TranslateController implements Listener {
         this.loadData();
 
         this.authKeysPool = new ArrayList<>();
-        this.authKeysPool.addAll(Config.API_KEYS);
+        this.authKeysPool.addAll((List<String>) Config.API_KEYS.asList());
 
         Bukkit.getPluginManager().registerEvents(this, TranslateX.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerChatEventListener(), TranslateX.getInstance());
@@ -64,15 +64,23 @@ public class TranslateController implements Listener {
 
     @SneakyThrows
     private void loadData() {
-        FileConfiguration config = TranslateX.getInstance().getConfig();
+        FileConfiguration config = TranslateX.getInstance().getConfigFile();
         if (config == null) {
             TranslateX.getInstance().saveDefaultConfig();
-            config = TranslateX.getInstance().getConfig();
+            config = TranslateX.getInstance().getConfigFile();
+        }
+
+        if (config == null) {
+            TranslateX.getInstance().log("Config file could not be loaded.");
+            return;
         }
 
         ConfigurationSection section = config.getConfigurationSection("PLAYER_DATA");
-        if (section == null) section = config.createSection("PLAYER_DATA");
-        if (section.getKeys(false) == null) return;
+        if (section == null) {
+            section = config.createSection("PLAYER_DATA");
+        }
+
+        if (section == null || section.getKeys(false) == null || section.getKeys(false).isEmpty()) return;
 
         for (String key : section.getKeys(false)) {
             final ConfigurationSection playerSection = section.getConfigurationSection(key);
@@ -84,8 +92,12 @@ public class TranslateController implements Listener {
 
             if (language == null || languageCode == null || playerId == null) continue;
 
-            final TranslatePlayer translatePlayer = new TranslatePlayer(UUID.fromString(playerId), language, languageCode);
-            this.translatePlayers.add(translatePlayer);
+            try {
+                final TranslatePlayer translatePlayer = new TranslatePlayer(UUID.fromString(playerId), language, languageCode);
+                this.translatePlayers.add(translatePlayer);
+            } catch (IllegalArgumentException e) {
+                TranslateX.getInstance().log("Invalid UUID format for player ID: " + playerId);
+            }
         }
 
         TranslateX.getInstance().log("- &aLoaded " + this.translatePlayers.size() + " player data");
@@ -109,7 +121,6 @@ public class TranslateController implements Listener {
         }
 
         TranslateX.getInstance().saveConfig();
-
         TranslateX.getInstance().log("- &aSaved " + this.translatePlayers.size() + " player data");
     }
 

@@ -105,6 +105,10 @@ public final class TranslateX extends JavaPlugin {
             }
         }
         configFile.save();
+
+        if (this.translatorController != null) {
+            this.translatorController.reloadTranslator();
+        }
     }
 
     public void log(String message) {

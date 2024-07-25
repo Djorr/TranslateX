@@ -51,7 +51,7 @@ public class TranslateController implements Listener {
         this.loadData();
 
         this.authKeysPool = new ArrayList<>();
-        this.authKeysPool.addAll((List<String>) Config.API_KEYS.asList());
+        this.authKeysPool.addAll(Config.API_KEYS.asList());
 
         Bukkit.getPluginManager().registerEvents(this, TranslateX.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerChatEventListener(), TranslateX.getInstance());
@@ -60,6 +60,12 @@ public class TranslateController implements Listener {
 
     public void disable() {
         this.saveData();
+    }
+
+    public void reloadTranslator() {
+        this.authKeysPool.clear();
+        this.authKeysPool.addAll(Config.API_KEYS.asList());
+        this.intializeTranslator();
     }
 
     @SneakyThrows
@@ -128,7 +134,10 @@ public class TranslateController implements Listener {
         if (this.authKeysPool.isEmpty()) {
             TranslateX.getInstance().log("&cNo auth keys found in config.yml! Please add some auth keys to the config.yml file.");
             return;
-        } else if (this.authKeysPool.contains("<YOUR DEEPL API KEY>")) {
+        } else if (this.authKeysPool.contains("PUT") ||
+                this.authKeysPool.contains("HERE") ||
+                this.authKeysPool.contains("YOUR") ||
+                this.authKeysPool.contains("API KEYS")) {
             TranslateX.getInstance().log("&cPlease replace the default auth key in the config.yml file with your own DeepL");
             return;
         }
@@ -189,6 +198,11 @@ public class TranslateController implements Listener {
     }
 
     public void setPlayerLanguage(Player player, String languageInput) {
+        if (this.getTranslator() == null) {
+            Bukkit.getConsoleSender().sendMessage("&cYour translator is not working.. please check your API keys!");
+            return;
+        }
+
         TranslatePlayer translatePlayer = this.getTransLatePlayer(player);
         final Language language = this.getLanguageByInput(languageInput);
         if (translatePlayer != null) {

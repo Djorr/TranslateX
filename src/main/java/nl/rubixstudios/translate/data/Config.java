@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 public enum Config {
-    API_KEYS(Arrays.asList("PUT", "HERE", "YOUR", "API KEYS"), "", "API_KEYS");
+    API_KEYS(Arrays.asList("PUT", "HERE", "YOUR", "API KEYS"), null, "API_KEYS");
 
     private final String configSection, comment;
     private Object value;
@@ -31,8 +31,8 @@ public enum Config {
         return (Double) value;
     }
 
-    public List<?> asList() {
-        return (List<?>) value;
+    public List<String> asList() {
+        return (List<String>) value;
     }
 
     public int asInt() {

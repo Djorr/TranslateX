@@ -29,6 +29,11 @@ public final class TranslateX extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        reloadConfig();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::startPlugin);
+    }
+
+    private void startPlugin() {
         this.log("&e                                                                                                    ");
         this.log("&e /$$$$$$$$                                     &f/$$              &f/$$               &f/$$   /$$");
         this.log("&e|__  $$__/                                    &f| $$              &f| $$              |&f $$  / $$");
@@ -44,15 +49,6 @@ public final class TranslateX extends JavaPlugin {
         this.log("&eVersion: &f0.1-BETA                                                                             ");
         this.log("&eDiscord: &fhttps://discord.rubixdevelopment.nl/                                                        ");
         this.log("                                                                                                    ");
-
-        try {
-            this.configFile = new ConfigFile("config.yml", this);
-            reloadConfig();
-        } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
 
         this.translatorController = new TranslateController();
         this.translatorController.intializeTranslator();
@@ -81,31 +77,8 @@ public final class TranslateX extends JavaPlugin {
 
     @Override
     public void reloadConfig() {
-        configFile.load();
-
-        configFile.setHeader("                                                                                                    \n" +
-                "|__  $$__/                                    | $$              | $$              | $$  / $$\n" +
-                "   | $$  /$$$$$$  /$$$$$$  /$$$$$$$    /$$$$$$$| $$  /$$$$$$  /$$$$$$    /$$$$$$ | $$/$$/\n" +
-                "   | $$ /$$__  $$|____  $$| $$__  $$  /$$_____/| $$ |____  $$|_  $$_/   /$$__  $$ \\ $$$$/\n" +
-                "   | $$| $$  \\__/ /$$$$$$$| $$  \\ $$ | $$$$$$  | $$  /$$$$$$$  | $$    | $$$$$$$$ $$  $$ \n" +
-                "   | $$| $$      /$$__  $$| $$  | $$  \\____  $$| $$ /$$__  $$  | $$ /$$| $$_____/ /$$/\\ $$\n" +
-                "   | $$| $$     |  $$$$$$$| $$  | $$ / $$$$$$$/| $$|  $$$$$$$  |  $$$$/|  $$$$$$$| $$  \\ $$\n" +
-                "   |__/|__/      \\_______/|__/  |__/ |_______/ |__/ \\_______/   \\___/   \\_______/|__/  |__/\n" +
-                "                                                                                                    \n" +
-                "Description: TranslateX is a plugin that allows you to translate messages in your server.             \n" +
-                "Author: Djorr (Rubix Development)                                                             \n" +
-                "Version: 0.1-BETA                                                                             \n" +
-                "Discord: https://discord.rubixdevelopment.nl/                                                        \n");
-        for (Config setting : Config.values()) {
-            String path = setting.getConfigSection();
-            if (!path.isEmpty()) {
-                if (!StringUtil.isNullOrEmpty(setting.getComment()))
-                    configFile.addComment(path, setting.getComment());
-                setting.setValue(configFile.get(path, setting));
-            }
-        }
-        configFile.save();
-
+        this.configFile = new ConfigFile("config.yml");
+        new Config();
         if (this.translatorController != null) {
             this.translatorController.reloadTranslator();
         }

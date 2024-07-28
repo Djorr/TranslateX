@@ -9,53 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public enum Config {
-    API_KEYS(Arrays.asList("PUT", "HERE", "YOUR", "API KEYS"), null, "API_KEYS");
 
-    private final String configSection, comment;
-    private Object value;
+public class Config {
+    public static List<String> API_KEYS;
 
-    Config(Object value, String comment, String configSection) {
-        this.value = value;
-        this.comment = comment;
-        this.configSection = configSection;
-    }
-
-    public boolean asBoolean() {
-        return (Boolean) value;
-    }
-
-    public double asDouble() {
-        if (value instanceof Integer)
-            return (Integer) value;
-        return (Double) value;
-    }
-
-    public List<String> asList() {
-        return (List<String>) value;
-    }
-
-    public int asInt() {
-        if (value instanceof Double)
-            return ((Double) value).intValue();
-        return (Integer) value;
-    }
-
-    public void setValue(Object value) {
-        if (value instanceof List) {
-            value = JavaUtil.createList(value, String.class, false);
-        }
-        this.value = value;
-    }
-
-    public void set(Object value) {
-        setValue(value);
-        ConfigFile config = TranslateX.getInstance().getConfigFile();
-        config.set(configSection, value);
-        config.save();
-    }
-
-    public String asString() {
-        return ChatColor.translateAlternateColorCodes('&', ((String) value));
+    public Config() {
+        ConfigFile configFile = TranslateX.getInstance().getConfigFile();
+        API_KEYS = configFile.getStringList("API_KEYS");
     }
 }

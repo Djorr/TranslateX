@@ -1,102 +1,78 @@
 package nl.rubixstudios.translate.data;
 
-import lombok.Getter;
-import nl.rubixstudios.translate.TranslateX;
-import nl.rubixstudios.translate.util.ColorUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import nl.rubixstudios.translate.TranslateX;
+import nl.rubixstudios.translate.util.ColorUtil;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-@Getter
 public class ConfigFile extends YamlConfiguration {
+    private static final TranslateX mainInstance = TranslateX.getInstance();
 
-    protected final String name;
-    protected YamlConfiguration config;
-    protected ConfigCommenter commenter = new ConfigCommenter();
-    protected File file;
+    private final File file;
 
-    public ConfigFile(String name, Plugin plugin) {
-        this.name = name;
-        file = new File(plugin.getDataFolder(), name);
-        config = new YamlConfiguration();
-        if (!file.exists())
-            plugin.saveResource(name, false);
-        config.options().copyDefaults(true);
+    public File getFile() {
+        return this.file;
+    }
+
+    public ConfigFile(String name) throws RuntimeException {
+        this.file = new File(mainInstance.getDataFolder(), name);
+        if (!this.file.exists())
+            mainInstance.saveResource(name, false);
+        try {
+            load(this.file);
+        } catch (IOException|org.bukkit.configuration.InvalidConfigurationException e) {
+            mainInstance.log("");
+            mainInstance.log("&9===&b=============================================&9===");
+            mainInstance.log(center("&cError occurred while loading " + name + ".", 51));
+            mainInstance.log("");
+            Stream.<String>of(e.getMessage().split("\n")).forEach(mainInstance::log);
+            mainInstance.log("&9===&b=============================================&9===");
+            throw new RuntimeException();
+        }
+    }
+
+    public String center(String value, int maxLength) {
+        StringBuilder builder = new StringBuilder(maxLength - value.length());
+        IntStream.range(0, maxLength - value.length()).forEach(i -> builder.append(" "));
+        builder.insert(builder.length() / 2 + 1, value);
+        return builder.toString();
     }
 
     public void save() {
         try {
-            config.save(file);
-            commenter.saveComments(file);
-        } catch (Exception e) {
+            save(this.file);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void addComment(String path, String comment) {
-        commenter.addComment(path, comment);
+    public ConfigurationSection getSection(String name) {
+        return getConfigurationSection(name);
     }
 
-    public void setHeader(String header) {
-        commenter.setHeader(header);
+    public int getInt(String path) {
+        return getInt(path, 0);
     }
 
-    public void load() {
-        try {
-            config.load(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public double getDouble(String path) {
+        return getDouble(path, 0.0D);
     }
 
-    public void set(String path, Object val) {
-        config.set(path, val);
+    public boolean getBoolean(String path) {
+        return getBoolean(path, false);
     }
 
-    public boolean getBoolean(String path, boolean def) {
-        config.addDefault(path, def);
-        return config.getBoolean(path, config.getBoolean(path));
-    }
-
-    public double getDouble(String path, double def) {
-        config.addDefault(path, def);
-        return config.getDouble(path, config.getDouble(path));
-    }
-
-    public int getInt(String path, int def) {
-        config.addDefault(path, def);
-        return config.getInt(path, config.getInt(path));
-    }
-
-    public <T> List getList(String path, T def) {
-        config.addDefault(path, def);
-        return config.getList(path, config.getList(path));
-    }
-
-    public String getString(String path, String def) {
-        config.addDefault(path, def);
-        return config.getString(path, config.getString(path));
-    }
-
-    public Object get(String path, Config setting) {
-        Object def = setting.getValue();
-        return def instanceof Integer ? getInt(path, (Integer) def) :
-                def instanceof Double ? getDouble(path, (Double) def) :
-                        def instanceof Boolean ? getBoolean(path, (Boolean) def) :
-                                def instanceof String ? getString(path, (String) def) :
-                                        def instanceof List ? getList(path, (List) def) : def;
+    public String getString(String path) {
+        return ColorUtil.translate(getString(path, ""));
     }
 
     public List<String> getStringList(String path) {
-        return config.getStringList(path).stream().map(string -> ChatColor.translateAlternateColorCodes('&', string)).collect(Collectors.toList());
+        return (List<String>)super.getStringList(path).stream().map(ColorUtil::translate).collect(Collectors.toList());
     }
 }

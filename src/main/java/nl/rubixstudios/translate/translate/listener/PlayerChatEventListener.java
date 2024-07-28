@@ -50,15 +50,6 @@ public class PlayerChatEventListener implements Listener {
             final String transLatedMessage = textResult.getText();
             recipient.sendMessage(ColorUtil.translate("<message>"
                     .replace("<message>", transLatedMessage)));
-
-//            if (sender != null) {
-//                sender.sendMessage(ColorUtil.translate("&f<<playerName>> <message>"
-//                        .replace("<playerName>", recipient.getName())
-//                        .replace("<message>", transLatedMessage)));
-//            } else {
-//                recipient.sendMessage(ColorUtil.translate("<message>"
-//                        .replace("<message>", transLatedMessage)));
-//            }
         }
     }
 }

@@ -51,7 +51,7 @@ public class TranslateController implements Listener {
         this.loadData();
 
         this.authKeysPool = new ArrayList<>();
-        this.authKeysPool.addAll(Config.API_KEYS.asList());
+        this.authKeysPool.addAll(Config.API_KEYS);
 
         Bukkit.getPluginManager().registerEvents(this, TranslateX.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerChatEventListener(), TranslateX.getInstance());
@@ -64,7 +64,7 @@ public class TranslateController implements Listener {
 
     public void reloadTranslator() {
         this.authKeysPool.clear();
-        this.authKeysPool.addAll(Config.API_KEYS.asList());
+        this.authKeysPool.addAll(Config.API_KEYS);
         this.intializeTranslator();
     }
 
@@ -134,10 +134,7 @@ public class TranslateController implements Listener {
         if (this.authKeysPool.isEmpty()) {
             TranslateX.getInstance().log("&cNo auth keys found in config.yml! Please add some auth keys to the config.yml file.");
             return;
-        } else if (this.authKeysPool.contains("PUT") ||
-                this.authKeysPool.contains("HERE") ||
-                this.authKeysPool.contains("YOUR") ||
-                this.authKeysPool.contains("API KEYS")) {
+        } else if (this.authKeysPool.contains("<YOUR DEEPL API KEY>")) {
             TranslateX.getInstance().log("&cPlease replace the default auth key in the config.yml file with your own DeepL");
             return;
         }

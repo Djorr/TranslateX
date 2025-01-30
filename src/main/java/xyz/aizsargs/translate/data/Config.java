@@ -1,11 +1,9 @@
-package nl.rubixstudios.translate.data;
+package xyz.aizsargs.translate.data;
 
 import lombok.Getter;
-import nl.rubixstudios.translate.TranslateX;
-import nl.rubixstudios.translate.util.JavaUtil;
+import xyz.aizsargs.translate.TranslateX;
 import org.bukkit.ChatColor;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Getter

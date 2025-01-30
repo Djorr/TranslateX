@@ -1,11 +1,11 @@
-package nl.rubixstudios.translate.translate.listener;
+package xyz.aizsargs.translate.translate.listener;
 
 import com.deepl.api.Language;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.chat.*;
-import nl.rubixstudios.translate.translate.TranslateController;
-import nl.rubixstudios.translate.translate.TranslatePlayer;
-import nl.rubixstudios.translate.util.ColorUtil;
+import xyz.aizsargs.translate.translate.TranslateController;
+import xyz.aizsargs.translate.translate.TranslatePlayer;
+import xyz.aizsargs.translate.util.ColorUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

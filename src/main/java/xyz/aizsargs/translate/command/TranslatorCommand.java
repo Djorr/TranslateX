@@ -1,4 +1,4 @@
-package nl.rubixstudios.translate.command;
+package xyz.aizsargs.translate.command;
 
 import com.deepl.api.Language;
 import com.deepl.api.Translator;
@@ -7,10 +7,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import nl.rubixstudios.translate.TranslateX;
-import nl.rubixstudios.translate.data.ConfigFile;
-import nl.rubixstudios.translate.translate.TranslateController;
-import nl.rubixstudios.translate.util.ColorUtil;
+import xyz.aizsargs.translate.TranslateX;
+import xyz.aizsargs.translate.translate.TranslateController;
+import xyz.aizsargs.translate.util.ColorUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

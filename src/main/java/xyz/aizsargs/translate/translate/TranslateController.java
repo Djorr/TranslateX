@@ -1,4 +1,4 @@
-package nl.rubixstudios.translate.translate;
+package xyz.aizsargs.translate.translate;
 
 import com.deepl.api.*;
 import lombok.Getter;
@@ -8,11 +8,11 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import nl.rubixstudios.translate.TranslateX;
-import nl.rubixstudios.translate.data.Config;
-import nl.rubixstudios.translate.translate.listener.PlayerChatEventListener;
-import nl.rubixstudios.translate.translate.listener.PlayerJoinEventListener;
-import nl.rubixstudios.translate.util.ColorUtil;
+import xyz.aizsargs.translate.TranslateX;
+import xyz.aizsargs.translate.data.Config;
+import xyz.aizsargs.translate.translate.listener.PlayerChatEventListener;
+import xyz.aizsargs.translate.translate.listener.PlayerJoinEventListener;
+import xyz.aizsargs.translate.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,6 +30,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+// TODO: Add the player inventory and Hologram function!
 
 @Getter
 @Setter

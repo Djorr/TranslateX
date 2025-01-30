@@ -1,6 +1,7 @@
-package nl.rubixstudios.translate.util;
+package xyz.aizsargs.translate.util;
 
 import org.bukkit.ChatColor;
+
 
 public class ColorUtil {
 

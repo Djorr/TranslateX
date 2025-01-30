@@ -1,7 +1,7 @@
 name: TranslateX
 version: '${project.version}'
-main: nl.rubixstudios.translate.TranslateX
-authors: [ Djorr ]
+main: xyz.aizsargs.translate.TranslateX
+authors: [ PingLagger ]
 commands:
   translator:
     description: Translate a message

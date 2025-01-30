@@ -1,14 +1,13 @@
-package nl.rubixstudios.translate;
+package xyz.aizsargs.translate;
 
 import lombok.Getter;
 import lombok.Setter;
-import nl.rubixstudios.translate.command.TranslatorCommand;
-import nl.rubixstudios.translate.data.Config;
-import nl.rubixstudios.translate.data.ConfigFile;
-import nl.rubixstudios.translate.translate.TranslateController;
-import nl.rubixstudios.translate.util.ColorUtil;
-import nl.rubixstudios.translate.util.Metrics;
-import nl.rubixstudios.translate.util.StringUtil;
+import xyz.aizsargs.translate.command.TranslatorCommand;
+import xyz.aizsargs.translate.data.Config;
+import xyz.aizsargs.translate.data.ConfigFile;
+import xyz.aizsargs.translate.translate.TranslateController;
+import xyz.aizsargs.translate.util.ColorUtil;
+import xyz.aizsargs.translate.util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;

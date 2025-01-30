@@ -1,7 +1,7 @@
-package nl.rubixstudios.translate.util;
+package xyz.aizsargs.translate.util;
 
 /**
- * @author Djorr on 25/07/2024
+ * @author PingLagger on 25/07/2024
  * @project TranslateX
  */
 public class StringUtil {

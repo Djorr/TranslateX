@@ -8,9 +8,9 @@
 #    |__/|__/      \_______/|__/  |__/ |_______/ |__/ \_______/   \___/   \_______/|__/  |__/
 #
 # Description: TranslateX is a plugin that allows you to translate messages in your server.
-# Author: Djorr (Rubix Development)
+# Author: PingLagger (AizsArgs Services)
 # Version: 0.5-BETA
-# Discord: https://discord.rubixdevelopment.nl/
+# Discord: https://discord.aizsargs.xyz/
 #
 API_KEYS:
   - "<YOUR DEEPL API KEY>"

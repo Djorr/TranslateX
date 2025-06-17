@@ -20,12 +20,6 @@ To unlock the full potential of TranslateX, you'll need a **DeepL API key**. The
 
 - **Language Preference Storage:** TranslateX remembers the language you've chosen, so you don't have to repeatedly set your translation preferences.
 
-## Goals
-
-- **250 Downloads:** Upon reaching 250 downloads, TranslateX will introduce hologram translation features, enhancing your immersive gaming experience.
-
-- **500 Downloads:** When TranslateX hits 500 downloads, you can expect inventory translation capabilities, taking your gameplay to the next level.
-
 Embark on your Minecraft journey with TranslateX and experience a new level of communication through seamless translation!
 
 **Please note:** We only track metrics through bStats.

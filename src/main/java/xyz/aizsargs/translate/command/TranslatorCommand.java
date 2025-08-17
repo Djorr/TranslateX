@@ -1,236 +1,274 @@
 package xyz.aizsargs.translate.command;
 
-import com.deepl.api.Language;
-import com.deepl.api.Translator;
-import lombok.SneakyThrows;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.translate.TranslateController;
-import xyz.aizsargs.translate.util.ColorUtil;
+import lombok.extern.java.Log;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import xyz.aizsargs.translate.TranslateX;
+import xyz.aizsargs.translate.data.Config;
+import xyz.aizsargs.translate.translate.TranslatePlayer;
+import xyz.aizsargs.translate.translate.menu.LanguageSelectionMenu;
+import xyz.aizsargs.translate.util.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
+/**
+ * Main command for TranslateX plugin
+ */
+@Log
 public class TranslatorCommand implements CommandExecutor, TabCompleter {
-
-    private final TranslateController translateController;
-
-    public TranslatorCommand() {
-        this.translateController = TranslateController.getInstance();
-    }
-
-    @SneakyThrows
+    
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (!command.getName().equals("translatorr") && !command.getName().equals("tr") && !command.getName().equals("translator") && !command.getName().equals("t"))
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + "&cThis command can only be used by players!"));
             return true;
-
+        }
+        
+        Player player = (Player) sender;
+        
+        if (!player.hasPermission(Config.TRANSLATE_PERMISSION)) {
+            player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + Config.NO_PERMISSION_MESSAGE));
+            return true;
+        }
+        
         if (args.length == 0) {
-            this.sendHelpMessage(sender);
-            return false;
+            // Open language selection menu
+            openLanguageMenu(player);
+            return true;
         }
-
-        switch (args[0]) {
-            case "help":
-            case "?":
-            case "h": {
-                this.sendHelpMessage(sender);
-                break;
-            }
-            case "reload":
-            case "rl": {
-                if (!sender.hasPermission("translatorl.reload")) {
-                    sender.sendMessage(ColorUtil.translate("&cYou don't have permission to do this."));
-                    return false;
-                }
-
-                TranslateX.getInstance().reloadConfig();
-                sender.sendMessage(ColorUtil.translate("&aReloaded the plugin."));
-                break;
-            }
-            case "translate":
-            case "t": {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorUtil.translate("&cYou must be a player to do this."));
-                    return false;
-                }
-
-                final Player player = (Player) sender;
-                if (!player.hasPermission("translatorl.translate")) {
-                    sender.sendMessage(ColorUtil.translate("&cYou don't have permission to do this."));
-                    return false;
-                }
-
-                if (args.length < 3) {
-                    sender.sendMessage(ColorUtil.translate("&cUsage: /translator translate <langcode> <message>"));
-                    return false;
-                }
-
-                final String language = args[1];
-
-                final StringBuilder message = new StringBuilder();
-                for (int i = 2; i < args.length; i++) {
-                    message.append(args[i]).append(" ");
-                }
-
-                this.translateController.sendTranslatedMessage(player, language, message.toString());
-                break;
-            }
-            case "list":
-            case "l":{
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorUtil.translate("&cYou must be a player to do this."));
-                    return false;
-                }
-
-                final Player player = (Player) sender;
-                if (!player.hasPermission("translatorl.list")) {
-                    sender.sendMessage(ColorUtil.translate("&cYou don't have permission to do this."));
-                    return false;
-                }
-
-                final Translator translator = this.translateController.getTranslator();
-                if (translator == null) {
-                    sender.sendMessage(ColorUtil.translate("&cThe translator is not initialized yet."));
-                    return false;
-                }
-
-                this.sendLanguageList(player, translator.getSourceLanguages(), args);
-                break;
-            }
-            case "setlang": {
+        
+        String subCommand = args[0].toLowerCase();
+        
+        switch (subCommand) {
+            case "language":
+            case "lang":
+            case "set":
                 if (args.length < 2) {
-                    sender.sendMessage(ColorUtil.translate("&cUsage: /translator setlang <langcode>"));
-                    return false;
+                    player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + "&cUsage: /translator set <language>"));
+                    return true;
                 }
-
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(ColorUtil.translate("&cYou must be a player to do this."));
-                    return false;
-                }
-
-                final Player player = (Player) sender;
-                if (!player.hasPermission("translatorl.setlang")) {
-                    sender.sendMessage(ColorUtil.translate("&cYou don't have permission to do this."));
-                    return false;
-                }
-
-                final String language = args[1];
-                this.translateController.setPlayerLanguage(player, language);
+                setPlayerLanguage(player, args[1]);
                 break;
-            }
-        }
-
-        return false;
-    }
-
-    @SneakyThrows
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-        final List<String> completions = new ArrayList<>();
-
-        final String commandName = cmd.getName();
-        if (commandName.equalsIgnoreCase("translatorr")
-                || commandName.equalsIgnoreCase("tr")
-                || commandName.equalsIgnoreCase("translator")
-                || commandName.equalsIgnoreCase("t")) {
-            if (args.length == 1) {
-                return Arrays.asList("help", "?", "h", "reload", "rl", "translate", "t", "list", "l", "setlang", "sl");
-            }
-
-            if (args.length == 2) {
-                final String subCommand = args[0];
-                if (subCommand.equalsIgnoreCase("setlang")) {
-                    return this.translateController.getTranslator().getSourceLanguages().stream().map(Language::getCode).collect(Collectors.toList());
+                
+            case "menu":
+                openLanguageMenu(player);
+                break;
+                
+            case "info":
+                showPluginInfo(player);
+                break;
+                
+            case "reload":
+                if (!player.hasPermission(Config.ADMIN_PERMISSION)) {
+                    player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + Config.NO_PERMISSION_MESSAGE));
+                    return true;
                 }
-            }
+                reloadPlugin(player);
+                break;
+                
+            case "help":
+                showHelp(player);
+                break;
+                
+            default:
+                player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + "&cUnknown subcommand. Use /translator help for help."));
+                break;
         }
-
-        return completions;
+        
+        return true;
     }
-
-    private void sendHelpMessage(CommandSender sender) {
-        sender.sendMessage(ColorUtil.translate("&7&m----------------------------------------"));
-        sender.sendMessage(ColorUtil.translate("&6&lTranslateX &8- &fHelp"));
-        sender.sendMessage(ColorUtil.translate("&7&m----------------------------------------"));
-        sender.sendMessage(ColorUtil.translate("&e/translator help &8- &fShows this help message."));
-        sender.sendMessage(ColorUtil.translate("&e/translator reload &8- &fReloads the plugin."));
-        sender.sendMessage(ColorUtil.translate("&e/translator translate <langcode> <message> &8- &fTranslates a message."));
-        sender.sendMessage(ColorUtil.translate("&e/translator list &8- &7Lists all available languages."));
-        sender.sendMessage(ColorUtil.translate("&7&m----------------------------------------"));
+    
+    private void openLanguageMenu(Player player) {
+        LanguageSelectionMenu menu = new LanguageSelectionMenu(player);
+        menu.open();
+        player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + "&aOpening language selection menu..."));
     }
-
-    private void sendLanguageList(Player player, List<Language> languages, String[] args) {
-        if (languages.isEmpty()) {
-            player.sendMessage(ColorUtil.translate("&6&lTranslateX &8» &7There are no languages available."));
+    
+    private void setPlayerLanguage(Player player, String languageInput) {
+        // Get the language from input
+        String languageCode = getLanguageCode(languageInput);
+        if (languageCode == null) {
+            player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + Config.INVALID_LANGUAGE_MESSAGE));
             return;
         }
-
-        final int linesEachPage = 5;
-        final int languageSize = languages.size();
-
-        int currentPage = 1;
-        if (args.length >= 1) {
-            try {
-                if (args.length == 2) {
-                    currentPage = Integer.parseInt(args[1]);
-                    currentPage = Math.max(currentPage, 1);
-                } else {
-                    currentPage = Integer.parseInt(args[0]);
-                    currentPage = Math.max(currentPage, 1);
+        
+        // Set the player's language
+        TranslatePlayer translatePlayer = TranslateX.getInstance().getTranslatorController().getTransLatePlayer(player);
+        if (translatePlayer == null) {
+            translatePlayer = new TranslatePlayer(player);
+            TranslateX.getInstance().getTranslatorController().getTranslatePlayers().add(translatePlayer);
+        }
+        
+        translatePlayer.setLanguageCode(languageCode);
+        translatePlayer.setLanguage(getLanguageName(languageCode));
+        
+        // Save the data
+        TranslateX.getInstance().saveConfig();
+        
+        // Send confirmation message
+        String message = Config.LANGUAGE_SET_MESSAGE
+            .replace("{language}", getLanguageName(languageCode))
+            .replace("{code}", languageCode);
+        
+        player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + message));
+        
+        log.info("Player " + player.getName() + " set their language to " + languageCode);
+    }
+    
+    private void showPluginInfo(Player player) {
+        player.sendMessage(ColorUtil.translate("&6&l🌐 TranslateX Plugin Information"));
+        player.sendMessage(ColorUtil.translate("&7Version: &f1.0.0"));
+        player.sendMessage(ColorUtil.translate("&7Author: &fDjorr (Rubix Development)"));
+        player.sendMessage(ColorUtil.translate("&7Description: &fAdvanced translation plugin with multi-API support"));
+        player.sendMessage(ColorUtil.translate("&7Discord: &fhttps://discord.rubixdevelopment.nl/"));
+        player.sendMessage("");
+        
+        // Show current language
+        TranslatePlayer translatePlayer = TranslateX.getInstance().getTranslatorController().getTransLatePlayer(player);
+        if (translatePlayer != null) {
+            player.sendMessage(ColorUtil.translate("&7Your current language: &a" + translatePlayer.getLanguage() + " (" + translatePlayer.getLanguageCode() + ")"));
+        } else {
+            player.sendMessage(ColorUtil.translate("&7Your current language: &cNot set"));
+        }
+    }
+    
+    private void reloadPlugin(Player player) {
+        player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + "&aReloading TranslateX plugin..."));
+        TranslateX.getInstance().reloadConfig();
+        player.sendMessage(ColorUtil.translate(Config.MESSAGE_PREFIX + "&aPlugin reloaded successfully!"));
+    }
+    
+    private void showHelp(Player player) {
+        player.sendMessage(ColorUtil.translate("&6&l🌐 TranslateX Commands"));
+        player.sendMessage(ColorUtil.translate("&7/translator &f- Open language selection menu"));
+        player.sendMessage(ColorUtil.translate("&7/translator menu &f- Open language selection menu"));
+        player.sendMessage(ColorUtil.translate("&7/translator set <lang> &f- Set your language"));
+        player.sendMessage(ColorUtil.translate("&7/translator info &f- Show plugin information"));
+        player.sendMessage(ColorUtil.translate("&7/translator help &f- Show this help message"));
+        
+        if (player.hasPermission(Config.ADMIN_PERMISSION)) {
+            player.sendMessage(ColorUtil.translate("&7/translator reload &f- Reload the plugin"));
+        }
+    }
+    
+    private String getLanguageCode(String input) {
+        String upperInput = input.toUpperCase();
+        
+        // Direct language codes
+        if (upperInput.matches("^[A-Z]{2}$")) {
+            return upperInput;
+        }
+        
+        // Language names
+        switch (upperInput) {
+            case "ENGLISH": return "EN";
+            case "GERMAN": return "DE";
+            case "FRENCH": return "FR";
+            case "SPANISH": return "ES";
+            case "ITALIAN": return "IT";
+            case "DUTCH": return "NL";
+            case "POLISH": return "PL";
+            case "PORTUGUESE": return "PT";
+            case "RUSSIAN": return "RU";
+            case "JAPANESE": return "JA";
+            case "CHINESE": return "ZH";
+            case "KOREAN": return "KO";
+            case "ARABIC": return "AR";
+            case "HINDI": return "HI";
+            case "TURKISH": return "TR";
+            case "SWEDISH": return "SV";
+            case "DANISH": return "DA";
+            case "NORWEGIAN": return "NO";
+            case "FINNISH": return "FI";
+            case "CZECH": return "CS";
+            case "HUNGARIAN": return "HU";
+            case "ROMANIAN": return "RO";
+            case "BULGARIAN": return "BG";
+            case "CROATIAN": return "HR";
+            case "SLOVAK": return "SK";
+            case "SLOVENIAN": return "SL";
+            case "ESTONIAN": return "ET";
+            case "LATVIAN": return "LV";
+            case "LITHUANIAN": return "LT";
+            case "MALTESE": return "MT";
+            case "GREEK": return "EL";
+            case "IRISH": return "GA";
+            case "WELSH": return "CY";
+            default: return null;
+        }
+    }
+    
+    private String getLanguageName(String languageCode) {
+        switch (languageCode.toUpperCase()) {
+            case "EN": return "English";
+            case "DE": return "German";
+            case "FR": return "French";
+            case "ES": return "Spanish";
+            case "IT": return "Italian";
+            case "NL": return "Dutch";
+            case "PL": return "Polish";
+            case "PT": return "Portuguese";
+            case "RU": return "Russian";
+            case "JA": return "Japanese";
+            case "ZH": return "Chinese";
+            case "KO": return "Korean";
+            case "AR": return "Arabic";
+            case "HI": return "Hindi";
+            case "TR": return "Turkish";
+            case "SV": return "Swedish";
+            case "DA": return "Danish";
+            case "NO": return "Norwegian";
+            case "FI": return "Finnish";
+            case "CS": return "Czech";
+            case "HU": return "Hungarian";
+            case "RO": return "Romanian";
+            case "BG": return "Bulgarian";
+            case "HR": return "Croatian";
+            case "SK": return "Slovak";
+            case "SL": return "Slovenian";
+            case "ET": return "Estonian";
+            case "LV": return "Latvian";
+            case "LT": return "Lithuanian";
+            case "MT": return "Maltese";
+            case "EL": return "Greek";
+            case "GA": return "Irish";
+            case "CY": return "Welsh";
+            default: return languageCode;
+        }
+    }
+    
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+        
+        if (args.length == 1) {
+            List<String> subCommands = Arrays.asList("language", "lang", "set", "menu", "info", "help");
+            
+            if (sender.hasPermission(Config.ADMIN_PERMISSION)) {
+                subCommands.add("reload");
+            }
+            
+            for (String subCommand : subCommands) {
+                if (subCommand.toLowerCase().startsWith(args[0].toLowerCase())) {
+                    completions.add(subCommand);
                 }
-            } catch (NumberFormatException e) {
-                //do nothing
+            }
+        } else if (args.length == 2 && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("language") || args[0].equalsIgnoreCase("lang"))) {
+            // Language codes for tab completion
+            String[] languages = {"EN", "DE", "FR", "ES", "IT", "NL", "PL", "PT", "RU", "JA", "ZH", "KO", "AR", "HI", "TR", "SV", "DA", "NO", "FI", "CS", "HU", "RO", "BG", "HR", "SK", "SL", "ET", "LV", "LT", "MT", "EL", "GA", "CY"};
+            
+            for (String language : languages) {
+                if (language.toLowerCase().startsWith(args[1].toLowerCase())) {
+                    completions.add(language);
+                }
             }
         }
-        int totalPages = (int) Math.ceil(languageSize / (double) linesEachPage);
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
-
-        player.sendMessage(ColorUtil.translate("&7&m----------------------------------------"));
-        player.sendMessage(ColorUtil.translate("&6&lTranslateX &8- &fList of all languages &7(&e<page>/<maxPage>&7)"
-                .replace("<page>", String.valueOf(currentPage))
-                .replace("<maxPage>", String.valueOf(totalPages))));
-        player.sendMessage(ColorUtil.translate("&7 langcode &8| &elanguage"));
-        player.sendMessage(ColorUtil.translate(""));
-
-        for (int i = 0; i < linesEachPage; i++) {
-            final int index = (currentPage - 1) * linesEachPage + i;
-            if (index >= languageSize) {
-                break;
-            }
-
-            final Language language = languages.get(index);
-            player.sendMessage(ColorUtil.translate("&8- &7<id> &8| &e<name>"
-                    .replace("<id>", String.valueOf(language.getCode()))
-                    .replace("<name>", language.getName())));
-        }
-
-
-        final TextComponent goToPreviousPage = new TextComponent(ColorUtil.translate("\n&cPrevious page"));
-        goToPreviousPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ColorUtil.translate("&7Click to go to the previous page.")).create()));
-        goToPreviousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/translator list " + (currentPage - 1)));
-
-        final TextComponent tussenPage = new TextComponent(ColorUtil.translate(" &8| &7"));
-
-        final TextComponent goToNextPage = new TextComponent(ColorUtil.translate("&aNext page\n"));
-        goToNextPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ColorUtil.translate("&7Click to go to the next page.")).create()));
-        goToNextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/translator list " + (currentPage + 1)));
-
-        final TextComponent end = new TextComponent(ColorUtil.translate("&7&m----------------------------------------"));
-
-        player.spigot().sendMessage(goToPreviousPage, tussenPage, goToNextPage, end);
+        
+        return completions;
     }
 }

@@ -7,10 +7,197 @@
 #    | $$| $$     |  $$$$$$$| $$  | $$ / $$$$$$$/| $$|  $$$$$$$  |  $$$$/|  $$$$$$$| $$  \ $$
 #    |__/|__/      \_______/|__/  |__/ |_______/ |__/ \_______/   \___/   \_______/|__/  |__/
 #
-# Description: TranslateX is a plugin that allows you to translate messages in your server.
-# Author: PingLagger (AizsArgs Services)
-# Version: 0.5-BETA
-# Discord: https://discord.aizsargs.xyz/
+# Description: TranslateX is a plugin that allows you to translate messages and items in your server.
+# Author: Djorr (Rubix Development)
+# Version: 1.0.0
+# Discord: https://discord.rubixdevelopment.nl/
 #
-API_KEYS:
-  - "<YOUR DEEPL API KEY>"
+
+# ========================================
+# GENERAL SETTINGS
+# ========================================
+GENERAL:
+  # Enable/disable the plugin
+  enabled: true
+  
+  # Default language for the server
+  default_language: "EN"
+  
+  # Enable debug mode
+  debug: false
+  
+  # Maximum message length for translation
+  max_message_length: 1000
+  
+  # Translation cache duration in minutes
+  cache_duration: 30
+
+# ========================================
+# TRANSLATION PROVIDERS
+# ========================================
+TRANSLATION_PROVIDERS:
+  # Priority order (first one will be used as primary)
+  priority_order:
+    - "deepl"
+    - "openai"
+    - "google"
+    - "fallback"
+  
+  # DeepL API Configuration
+  deepl:
+    enabled: true
+    api_keys:
+      - "<YOUR DEEPL API KEY>"
+    # DeepL specific settings
+    formality: "default" # default, more, less
+    preserve_formatting: true
+  
+  # OpenAI API Configuration
+  openai:
+    enabled: true
+    api_keys:
+      - "<YOUR OPENAI API KEY>"
+    # OpenAI specific settings
+    model: "gpt-3.5-turbo"
+    max_tokens: 150
+    temperature: 0.3
+  
+  # Google Translate Configuration
+  google:
+    enabled: true
+    api_keys:
+      - "<YOUR GOOGLE API KEY>"
+    # Google specific settings
+    source_language: "auto"
+  
+  # Fallback translation (basic word replacement)
+  fallback:
+    enabled: true
+    # Custom word mappings for fallback
+    word_mappings:
+      "hello": "bonjour"
+      "goodbye": "au revoir"
+      "thank you": "merci"
+
+# ========================================
+# FEATURES
+# ========================================
+FEATURES:
+  # Chat translation
+  chat_translation:
+    enabled: true
+    # Auto-translate incoming chat messages
+    auto_translate_incoming: true
+    # Auto-translate outgoing chat messages
+    auto_translate_outgoing: false
+    # Show original message alongside translation
+    show_original: true
+  
+  # Item translation
+  item_translation:
+    enabled: true
+    # Translate item names
+    translate_names: true
+    # Translate item lore
+    translate_lore: true
+    # Translate item descriptions
+    translate_descriptions: true
+    # Cache item translations
+    cache_translations: true
+  
+  # Command translation
+  command_translation:
+    enabled: true
+    # Translate command help messages
+    translate_help: true
+    # Translate command feedback
+    translate_feedback: true
+  
+  # Sign translation
+  sign_translation:
+    enabled: true
+    # Translate signs when placed
+    translate_on_place: true
+    # Translate existing signs
+    translate_existing: false
+
+# ========================================
+# USER INTERFACE
+# ========================================
+USER_INTERFACE:
+  # Language selection menu
+  language_menu:
+    enabled: true
+    # Show language flags
+    show_flags: true
+    # Show language names in native script
+    show_native_names: true
+    # Show language codes
+    show_codes: true
+  
+  # Translation feedback
+  translation_feedback:
+    enabled: true
+    # Show translation quality indicator
+    show_quality: true
+    # Show source language detection
+    show_source_language: true
+  
+  # Chat format
+  chat_format:
+    # Format for translated messages
+    format: "&6&l[&e{source_lang}&6&l → &a{target_lang}&6&l] &f{message}"
+    # Show translation provider
+    show_provider: true
+
+# ========================================
+# PERFORMANCE
+# ========================================
+PERFORMANCE:
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    # Maximum requests per minute per player
+    max_requests_per_minute: 30
+    # Maximum requests per minute globally
+    max_global_requests_per_minute: 1000
+  
+  # Caching
+  caching:
+    enabled: true
+    # Cache size limit
+    max_cache_size: 10000
+    # Cache expiration time in minutes
+    expiration_time: 60
+  
+  # Async processing
+  async:
+    enabled: true
+    # Thread pool size
+    thread_pool_size: 4
+
+# ========================================
+# MESSAGES
+# ========================================
+MESSAGES:
+  prefix: "&6&lTranslateX &8» &f"
+  language_set: "&aYour language has been set to: {language} ({code})"
+  translation_success: "&aMessage translated successfully!"
+  translation_failed: "&cTranslation failed. Please try again."
+  no_permission: "&cYou don't have permission to use this command."
+  invalid_language: "&cInvalid language specified."
+  rate_limit_exceeded: "&cYou've exceeded the rate limit. Please wait before trying again."
+  api_key_invalid: "&cInvalid API key. Please check your configuration."
+
+# ========================================
+# PERMISSIONS
+# ========================================
+PERMISSIONS:
+  # Basic translation permission
+  translate: "translatorx.translate"
+  # Item translation permission
+  translate_items: "translatorx.translate.items"
+  # Admin permission
+  admin: "translatorx.admin"
+  # Bypass rate limit permission
+  bypass_rate_limit: "translatorx.bypass.ratelimit"

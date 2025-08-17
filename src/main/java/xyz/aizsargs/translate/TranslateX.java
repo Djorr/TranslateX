@@ -6,11 +6,12 @@ import xyz.aizsargs.translate.command.TranslatorCommand;
 import xyz.aizsargs.translate.data.Config;
 import xyz.aizsargs.translate.data.ConfigFile;
 import xyz.aizsargs.translate.translate.TranslateController;
+import xyz.aizsargs.translate.translate.TranslationManager;
+import xyz.aizsargs.translate.translate.menu.LanguageMenuListener;
 import xyz.aizsargs.translate.util.ColorUtil;
 import xyz.aizsargs.translate.util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public final class TranslateX extends JavaPlugin {
     private Metrics metrics;
 
     private TranslateController translatorController;
+    private TranslationManager translationManager;
 
     @Override
     public void onEnable() {
@@ -39,29 +41,37 @@ public final class TranslateX extends JavaPlugin {
         this.log("&e   | $$  /&f$$$$$$  &e/$$$$$$  &f/$$$$$$$    &e/$$$$$$$&f| $$  &e/$$$$$$  &f/$$$$$$    &e/$$$$$$ &f| &f$$/$$/");
         this.log("&e   | $$ /&f$$__  $$&e|____  $$| &f$$__  $$  &e/$$_____/&f| $$ &e|____  $$|_  &f$$_/   &e/$$__  $$ &f\\ &f$$$$/");
         this.log("&e   | $$| &f$$  \\__/ &e/$$$$$$$| &f$$  \\ &f$$&e | $$$$$$  &f| $$  &e/$$$$$$$  &f| $$    &e| $$$$$$$$ &f$$  $$ ");
-        this.log("&e   | $$| &f$$      &e/$$__  $$| &f$$  | $$  &e\\____  $$&f| $$ &e/$$__  $$  | &f$$ /$$| &e$$_____/ &f/$$/\\ $$");
+        this.log("&e   | $$| &f$$      &e/$$__  $$| &f$$  | $$  &e\\____  $$&f| $$ /&f$$__  $$  | &f$$ /$$| &e$$_____/ &f/$$/\\ $$");
         this.log("&e   | $$| &f$$     &e|  $$$$$$$| &f$$  | $$ / &e$$$$$$$/| &f$$|  &e$$$$$$$  |  &f$$$$/|  &e$$$$$$$| &f$$  \\ $$");
         this.log("&e   |__/&f|__/      &e\\_______/&f|__/  |__/ &e|_______/ &f|__/ &e\\_______/   &f\\___/   &e\\_______/&f|__/  |__/");
         this.log("&e                                                                                                    ");
-        this.log("&e&lDescription: &fTranslateX is a plugin that allows you to translate messages in your server.             ");
+        this.log("&e&lDescription: &fTranslateX is a plugin that allows you to translate messages and items in your server.");
         this.log("&e&lAuthor: &fDjorr (Rubix Development)                                                             ");
-        this.log("&eVersion: &f0.1-BETA                                                                             ");
+        this.log("&eVersion: &f1.0.0                                                                             ");
         this.log("&eDiscord: &fhttps://discord.rubixdevelopment.nl/                                                        ");
         this.log("                                                                                                    ");
 
+        // Initialize translation manager
+        this.translationManager = new TranslationManager();
+
+        // Initialize translator controller
         this.translatorController = new TranslateController();
         this.translatorController.intializeTranslator();
 
+        // Register commands
         final PluginCommand command = this.getCommand("translator");
         if (command != null) {
             command.setExecutor(new TranslatorCommand());
             command.setTabCompleter(new TranslatorCommand());
-            command.setAliases(Arrays.asList("t", "translatorx", "tx"));
+            command.setAliases(Arrays.asList("t", "translatorx", "tx", "lang"));
             command.setPermission("translatorx.translate");
         }
 
+        // Register listeners
+        Bukkit.getPluginManager().registerEvents(new LanguageMenuListener(), this);
+
         this.log("");
-        this.log("- &aSuccesfully enabled &e&lTranslateX &aplugin.");
+        this.log("- &aSuccessfully enabled &e&lTranslateX &aplugin.");
         this.log("&e                                                                                                    ");
 
         int pluginId = 19970;
@@ -71,13 +81,14 @@ public final class TranslateX extends JavaPlugin {
     @Override
     public void onDisable() {
         if (this.translatorController != null) this.translatorController.disable();
+        if (this.translationManager != null) this.translationManager.shutdown();
         if (metrics != null) metrics.shutdown();
     }
 
     @Override
     public void reloadConfig() {
         this.configFile = new ConfigFile("config.yml");
-        new Config();
+        Config.loadConfig();
         if (this.translatorController != null) {
             this.translatorController.reloadTranslator();
         }

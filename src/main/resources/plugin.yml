@@ -1,8 +1,29 @@
 name: TranslateX
-version: '${project.version}'
+version: '1.0.0'
 main: xyz.aizsargs.translate.TranslateX
-authors: [ PingLagger ]
+api-version: '1.13'
+authors: [Djorr]
+description: Advanced translation plugin with multi-API support, hover functionality, and item translation
+website: https://github.com/Rubix-Development/TranslateX
+softdepend: [Vault]
+
 commands:
   translator:
-    description: Translate a message
-    aliases: [ tr, t, translator, translate ]
+    description: Main command for TranslateX plugin
+    usage: /<command> [subcommand] [args]
+    aliases: [t, translatorx, tx, lang]
+    permission: translatorx.translate
+
+permissions:
+  translatorx.translate:
+    description: Allows players to use basic translation features
+    default: true
+  translatorx.translate.items:
+    description: Allows players to translate items
+    default: true
+  translatorx.admin:
+    description: Allows access to admin commands
+    default: op
+  translatorx.bypass.ratelimit:
+    description: Allows players to bypass rate limiting
+    default: op

@@ -1,11 +1,16 @@
 name: TranslateX
 version: '1.0.0'
-main: xyz.aizsargs.translate.TranslateX
+main: nl.rubixdevelopment.translate.TranslateX
 api-version: '1.13'
 authors: [Djorr]
-description: Advanced translation plugin with multi-API support, hover functionality, and item translation
+description: Advanced translation plugin with multi-API support for Folia, Paper, and Spigot servers
 website: https://github.com/Rubix-Development/TranslateX
 softdepend: [Vault]
+
+# Server compatibility
+# - Folia: 1.20.1+
+# - Paper: 1.13+
+# - Spigot: 1.8.8+
 
 commands:
   translator:

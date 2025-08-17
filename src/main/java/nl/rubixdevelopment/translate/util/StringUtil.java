@@ -1,4 +1,4 @@
-package xyz.aizsargs.translate.util;
+package nl.rubixdevelopment.translate.util;
 
 /**
  * @author PingLagger on 25/07/2024

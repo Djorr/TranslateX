@@ -1,14 +1,13 @@
-package xyz.aizsargs.translate.translate;
+package nl.rubixdevelopment.translate.translate;
 
 import lombok.Getter;
 import lombok.extern.java.Log;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.entity.Player;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.data.Config;
-import xyz.aizsargs.translate.translate.provider.TranslationProvider;
-import xyz.aizsargs.translate.translate.provider.DeepLTranslationProvider;
-import xyz.aizsargs.translate.translate.provider.OpenAITranslationProvider;
+import nl.rubixdevelopment.translate.TranslateX;
+import nl.rubixdevelopment.translate.data.Config;
+import nl.rubixdevelopment.translate.translate.provider.TranslationProvider;
+import nl.rubixdevelopment.translate.translate.provider.OpenAITranslationProvider;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,11 +39,7 @@ public class TranslationManager {
     }
     
     private void initializeProviders() {
-        // Initialize providers based on priority
-        if (Config.DEEPL_ENABLED) {
-            providers.add(new DeepLTranslationProvider());
-        }
-        
+        // Initialize OpenAI provider
         if (Config.OPENAI_ENABLED) {
             providers.add(new OpenAITranslationProvider());
         }

@@ -1,4 +1,4 @@
-package xyz.aizsargs.translate.translate.menu;
+package nl.rubixdevelopment.translate.translate.menu;
 
 import lombok.extern.java.Log;
 import org.bukkit.Material;
@@ -7,10 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.data.Config;
-import xyz.aizsargs.translate.translate.TranslatePlayer;
-import xyz.aizsargs.translate.util.ColorUtil;
+import nl.rubixdevelopment.translate.TranslateX;
+import nl.rubixdevelopment.translate.data.Config;
+import nl.rubixdevelopment.translate.translate.TranslatePlayer;
+import nl.rubixdevelopment.translate.util.ColorUtil;
 
 /**
  * Handles inventory clicks for the language selection menu

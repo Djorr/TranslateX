@@ -1,4 +1,4 @@
-package xyz.aizsargs.translate.translate;
+package nl.rubixdevelopment.translate.translate;
 
 import lombok.Getter;
 import lombok.Setter;

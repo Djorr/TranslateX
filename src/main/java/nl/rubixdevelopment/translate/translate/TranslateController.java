@@ -1,18 +1,19 @@
-package xyz.aizsargs.translate.translate;
+package nl.rubixdevelopment.translate.translate;
 
 import com.deepl.api.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import net.kyori.adventure.translation.Translator;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.data.Config;
-import xyz.aizsargs.translate.translate.listener.PlayerChatEventListener;
-import xyz.aizsargs.translate.translate.listener.PlayerJoinEventListener;
-import xyz.aizsargs.translate.util.ColorUtil;
+import nl.rubixdevelopment.translate.TranslateX;
+import nl.rubixdevelopment.translate.data.Config;
+import nl.rubixdevelopment.translate.translate.listener.PlayerChatEventListener;
+import nl.rubixdevelopment.translate.translate.listener.PlayerJoinEventListener;
+import nl.rubixdevelopment.translate.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

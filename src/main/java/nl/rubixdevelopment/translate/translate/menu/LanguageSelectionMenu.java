@@ -1,4 +1,4 @@
-package xyz.aizsargs.translate.translate.menu;
+package nl.rubixdevelopment.translate.translate.menu;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -7,17 +7,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.data.Config;
-import xyz.aizsargs.translate.translate.TranslatePlayer;
-import xyz.aizsargs.translate.util.ColorUtil;
+import nl.rubixdevelopment.translate.TranslateX;
+import nl.rubixdevelopment.translate.data.Config;
+import nl.rubixdevelopment.translate.translate.TranslatePlayer;
+import nl.rubixdevelopment.translate.util.ColorUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Beautiful language selection menu with flags and native names
+ * Compatible with Paper and Spigot servers
  */
 public class LanguageSelectionMenu {
     
@@ -171,15 +171,6 @@ public class LanguageSelectionMenu {
             case "PT": return "🇵🇹 Portuguese";
             case "RU": return "🇷🇺 Russian";
             case "JA": return "🇯🇵 Japanese";
-            case "ZH": return "🇨🇳 Chinese";
-            case "KO": return "🇰🇷 Korean";
-            case "AR": return "🇸🇦 Arabic";
-            case "HI": return "🇮🇳 Hindi";
-            case "TR": return "🇹🇷 Turkish";
-            case "SV": return "🇸🇪 Swedish";
-            case "DA": return "🇩🇰 Danish";
-            case "NO": return "🇳🇴 Norwegian";
-            case "FI": return "🇫🇮 Finnish";
             case "CS": return "🇨🇿 Czech";
             case "HU": return "🇭🇺 Hungarian";
             case "RO": return "🇷🇴 Romanian";

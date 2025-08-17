@@ -12,7 +12,7 @@
  *
  * Violations will result in a ban of your plugin and account from bStats.
  */
-package xyz.aizsargs.translate.util;
+package nl.rubixdevelopment.translate.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

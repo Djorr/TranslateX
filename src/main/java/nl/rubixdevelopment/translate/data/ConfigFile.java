@@ -1,4 +1,4 @@
-package xyz.aizsargs.translate.data;
+package nl.rubixdevelopment.translate.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.util.ColorUtil;
+import nl.rubixdevelopment.translate.TranslateX;
+import nl.rubixdevelopment.translate.util.ColorUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 

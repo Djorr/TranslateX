@@ -1,10 +1,9 @@
-package xyz.aizsargs.translate.translate.provider;
+package nl.rubixdevelopment.translate.translate.provider;
 
 import com.deepl.api.*;
 import lombok.extern.java.Log;
-import xyz.aizsargs.translate.TranslateX;
-import xyz.aizsargs.translate.data.Config;
-import xyz.aizsargs.translate.translate.TranslationResult;
+import nl.rubixdevelopment.translate.data.Config;
+import nl.rubixdevelopment.translate.translate.TranslationResult;
 
 import java.util.List;
 

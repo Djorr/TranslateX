@@ -1,4 +1,4 @@
-package xyz.aizsargs.translate.util;
+package nl.rubixdevelopment.translate.util;
 
 import java.util.ArrayList;
 import java.util.List;

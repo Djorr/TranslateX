@@ -1,6 +1,6 @@
 # 🌐 TranslateX - Advanced Translation Plugin
 
-**TranslateX** is an advanced Minecraft plugin that enables real-time translation of chat messages and items with support for multiple translation APIs.
+**TranslateX** is an advanced Minecraft plugin that enables real-time translation of chat messages and items with OpenAI API support.
 
 ## ✨ Features
 
@@ -9,11 +9,10 @@
 - **Hover for translation**: Move your mouse over the message to see the translation
 - **Beautiful hover interface**: Shows original text, source and target language with flags
 
-### 🌍 **Multi-API Support**
-- **DeepL API**: Highest quality translations
-- **OpenAI API**: AI-powered translations
-- **Google Translate**: Widely supported languages
-- **Fallback system**: Automatic fallback on API errors
+### 🌍 **AI-Powered Translation**
+- **OpenAI API**: High-quality AI-powered translations
+- **Smart language detection**: Automatically detects source language
+- **Multiple language support**: 30+ supported languages
 
 ### 🎮 **User-Friendly Interface**
 - **Beautiful GUI menu**: Select your language with a visual menu
@@ -23,42 +22,43 @@
 ### ⚡ **Performance Features**
 - **Caching system**: Store translations for fast access
 - **Async processing**: Non-blocking translations
-- **Rate limiting**: Protect against API abuse
-- **Smart fallback**: Automatically switch between providers
+- **Smart optimization**: Efficient API usage
+
+### 🔧 **Server Compatibility**
+- **Paper**: Full support for 1.13+ servers  
+- **Spigot**: Full support for 1.8.8+ servers
+- **Automatic detection**: Plugin automatically detects your server type
 
 ## 🚀 Installation
 
 ### Requirements
-- **Minecraft**: 1.7 - 1.21.6 (Spigot/Paper)
+- **Minecraft**: 1.8.8 - 1.21.6 (Spigot/Paper)
 - **Java**: 8 or higher
-- **API Keys**: DeepL, OpenAI, or Google Translate
+- **API Key**: OpenAI API key
+
+### Supported Server Types
+- **Paper**: 1.13+ (Recommended for most servers)
+- **Spigot**: 1.8.8+ (Legacy support)
 
 ### Steps
 1. Download the latest version of TranslateX
 2. Place the JAR in your `plugins` folder
 3. Start your server
-4. Configure your API keys in `config.yml`
+4. Configure your OpenAI API key in `config.yml`
 5. Restart your server
 
 ## ⚙️ Configuration
 
-### Setting API Keys
+### Setting OpenAI API Key
 ```yaml
 TRANSLATION_PROVIDERS:
-  deepl:
-    enabled: true
-    api_keys:
-      - "YOUR_DEEPL_API_KEY"
-  
   openai:
     enabled: true
     api_keys:
       - "YOUR_OPENAI_API_KEY"
-  
-  google:
-    enabled: true
-    api_keys:
-      - "YOUR_GOOGLE_API_KEY"
+    model: "gpt-3.5-turbo"
+    max_tokens: 150
+    temperature: 0.3
 ```
 
 ### Adjusting Features
@@ -137,10 +137,6 @@ translatorx.bypass.ratelimit  # Bypass rate limiting
 
 ```yaml
 PERFORMANCE:
-  rate_limiting:
-    max_requests_per_minute: 30
-    max_global_requests_per_minute: 1000
-  
   caching:
     max_cache_size: 10000
     expiration_time: 60
@@ -149,42 +145,33 @@ PERFORMANCE:
     thread_pool_size: 4
 ```
 
-## 🎨 Customization
-
-### Chat Format
-```yaml
-USER_INTERFACE:
-  chat_format:
-    format: "&6&l[&e{source_lang}&6&l → &a{target_lang}&6&l] &f{message}"
-    show_provider: true
-```
-
-### Hover Text
-```yaml
-USER_INTERFACE:
-  translation_feedback:
-    show_quality: true
-    show_source_language: true
-```
-
 ## 🐛 Troubleshooting
 
 ### Common Problems
 
 **Plugin won't start:**
 - Check if you're using Java 8+
-- Check your API keys in config.yml
+- Check your OpenAI API key in config.yml
 - Look at the console for error messages
 
 **Translations not working:**
-- Check if your API keys are valid
+- Check if your OpenAI API key is valid
 - Check your internet connection
-- See if the API provider is available
+- See if OpenAI API is available
 
 **Performance issues:**
-- Lower the rate limiting settings
 - Reduce the cache size
-- Check your API quotas
+- Check your OpenAI API quotas
+
+### Server Compatibility Issues
+
+**Paper servers:**
+- Ensure you're running 1.13 or higher
+- Some features may not work on older versions
+
+**Spigot servers:**
+- Ensure you're running 1.8.8 or higher
+- Hover functionality may be limited on older versions
 
 ## 🔄 Updates
 
@@ -198,11 +185,14 @@ USER_INTERFACE:
 
 ### v1.0.0
 - ✨ New hover functionality
-- 🌍 Multi-API support (DeepL, OpenAI, Google)
+- 🌍 OpenAI API integration
 - 🎮 Beautiful GUI language selection menu
 - ⚡ Performance improvements
 - 🔧 Extensive configuration options
 - 📱 Modern Minecraft version support
+- 🚀 **NEW**: OpenAI-powered translations
+- 🔧 **NEW**: Enhanced server compatibility
+- 📊 **NEW**: Automatic language detection
 
 ## 🤝 Support
 
@@ -217,9 +207,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Credits
 
 - **Development**: Djorr (Rubix Development)
-- **APIs**: DeepL, OpenAI, Google Translate
+- **API**: OpenAI
 - **Community**: All users and contributors
 
 ---
 
 **🌐 Make your server accessible to players from around the world with TranslateX!**
+
+**🔧 Now supporting Paper and Spigot servers with OpenAI!**
